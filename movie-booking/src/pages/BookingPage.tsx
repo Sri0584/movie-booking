@@ -42,12 +42,11 @@ const BookingPage = () => {
 
 		setBookingError(null);
 		try {
-			const bookedResults = await createBooking({
+			await createBooking({
 				movieId: id,
 				seats: selectedSeats,
 				showTime,
 			}).unwrap();
-			console.log(bookedResults, selectedSeats, showTime);
 
 			setBookingSuccess(true);
 		} catch (error: any) {

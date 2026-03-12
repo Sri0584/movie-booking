@@ -63,9 +63,11 @@ const Home = () => {
 					<span style={{ fontWeight: "bold", color: "blueviolet" }}>
 						Your booked tickets:
 					</span>
-					<span className='message'>
-						{bookedTickets && ` ${bookedTickets.join(", ")}`}
-					</span>
+					<FlexLayout gap={3} wrap>
+						{bookedTickets?.map((booking) => (
+							<div className='message'>{booking}</div>
+						))}
+					</FlexLayout>
 				</Text>
 				{bookingErrormessage && (
 					<Text className='error message'>{bookingErrormessage}</Text>

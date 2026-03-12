@@ -7,7 +7,7 @@ const router = Router();
 router.post("/seed", async (req, res) => {
 	try {
 		const response = await fetch(
-			"https://www.omdbapi.com/?s=master&apikey=bedf03fc",
+			"https://www.omdbapi.com/?s=mom&apikey=bedf03fc",
 		);
 		const data = await response.json();
 
@@ -43,6 +43,8 @@ router.post("/seed", async (req, res) => {
 // GET /api/movies
 router.get("/", async (req, res) => {
 	const movies = await Movie.find().lean();
+	console.log(movies);
+	if (!movies) return res.status(404).json({ message: "Movies not found!" });
 	const transformed = movies.map((movie: any) => ({
 		id: movie._id.toString(),
 		title: movie.title,
@@ -57,6 +59,8 @@ router.get("/", async (req, res) => {
 // GET /api/movies/:id
 router.get("/:id", async (req, res) => {
 	const movie = await Movie.findById(req.params?.id).lean();
+	console.log(movie);
+
 	if (!movie) return res.status(404).json({ message: "Movie not found!" });
 	const transformed = {
 		id: movie._id.toString(),

@@ -13,6 +13,7 @@ router.post("/", auth, async (req: AuthRequest, res) => {
 		if (!movieId || !showTime || !seats || seats.length === 0) {
 			return res.status(400).json({ message: "Missing required fields" });
 		}
+		console.log(movieId, "movieId");
 
 		const movie = await Movie.findById(movieId);
 		if (!movie) return res.status(404).json({ message: "Movie not found" });
@@ -52,7 +53,9 @@ router.get("/my-tickets", auth, async (req: AuthRequest, res) => {
 		return res.status(404).json({ message: "No bookings on your name" });
 	const bookedTickets = bookings.map((booking) => {
 		const { movie, seats, showTime } = booking;
-		const { title } = movie as string | any;
+		const { title } = { ...(movie as any) };
+		if (!title)
+			return res.status(404).json({ message: "No bookings on your name" });
 		return `Movie: ${title} - Seats: ${seats.join(", ")} - Show Time: ${new Date(
 			showTime,
 		).toLocaleString()}`;
