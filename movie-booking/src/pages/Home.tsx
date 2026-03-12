@@ -5,11 +5,27 @@ import MovieCard from "../components/UI/MovieCard";
 import type { Movie } from "../features/movies/types";
 import { useNavigate } from "react-router-dom";
 import { Suspense, useState } from "react";
+import { useGetBookedTicketsQuery } from "../features/booking/bookingApi";
+import { getRtkErrorMessage } from "../utils/helpers";
 
 const Home = () => {
 	const navigate = useNavigate();
-	const { data, isLoading, isError } = useGetMoviesQuery();
+	const {
+		data: moviesData,
+		isLoading,
+		isError: isMoviesError,
+		error: moviesError,
+	} = useGetMoviesQuery();
 	const [seed, { isLoading: isSeeding }] = useSeedMoviesMutation();
+	const {
+		data: bookedTickets,
+		isError: isBookingError,
+		error,
+	} = useGetBookedTicketsQuery();
+	const moviesErrormessage =
+		isMoviesError ? getRtkErrorMessage(moviesError) : "";
+	const bookingErrormessage = isBookingError ? getRtkErrorMessage(error) : "";
+
 	const [seedMessage, setSeedMessage] = useState<string | null>(null);
 
 	const handleSeedMovies = async () => {
@@ -22,8 +38,9 @@ const Home = () => {
 		}
 	};
 
-	if (isLoading) return <Text>Loading movies...</Text>;
-	if (isError) return <Text>Failed to load movies.</Text>;
+	if (isLoading) return <Text className='message'>Loading movies...</Text>;
+	if (isMoviesError)
+		return <Text className='error message'>{moviesErrormessage}</Text>;
 
 	return (
 		<Suspense fallback={<Text>Loading...</Text>}>
@@ -36,11 +53,27 @@ const Home = () => {
 					{isSeeding ? "Seeding..." : "Seed Movies"}
 				</Button>
 				{seedMessage && (
-					<Text style={{ marginLeft: "10px" }}>{seedMessage}</Text>
+					<Text className='message'>
+						<b>{seedMessage}</b>
+					</Text>
 				)}
 			</div>
+			<div>
+				<Text>
+					<span style={{ fontWeight: "bold", color: "blueviolet" }}>
+						Your booked tickets:
+					</span>
+					<span className='message'>
+						{bookedTickets && ` ${bookedTickets.join(", ")}`}
+					</span>
+				</Text>
+				{bookingErrormessage && (
+					<Text className='error message'>{bookingErrormessage}</Text>
+				)}
+			</div>
+
 			<FlexLayout gap={3} wrap>
-				{data?.map((movie: Movie) => (
+				{moviesData?.map((movie: Movie) => (
 					<MovieCard
 						key={movie.id}
 						movie={movie}

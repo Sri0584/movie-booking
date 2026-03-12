@@ -41,13 +41,23 @@ router.post("/", auth, async (req: AuthRequest, res) => {
 	}
 });
 
-// GET /api/booking/my
-router.get("/my", auth, async (req: AuthRequest, res) => {
+// GET /api/booking/my-tickets
+router.get("/my-tickets", auth, async (req: AuthRequest, res) => {
 	const bookings = await Booking.find({ user: req.userId })
 		.populate("movie")
 		.lean();
-	if (!bookings) res.json({ message: "No bookings on your name" });
-	res.json(bookings);
+	console.log(bookings);
+
+	if (bookings.length === 0)
+		return res.status(404).json({ message: "No bookings on your name" });
+	const bookedTickets = bookings.map((booking) => {
+		const { movie, seats, showTime } = booking;
+		const { title } = movie as string | any;
+		return `Movie: ${title} - Seats: ${seats.join(", ")} - Show Time: ${new Date(
+			showTime,
+		).toLocaleString()}`;
+	});
+	res.json(bookedTickets);
 });
 
 export default router;

@@ -1,12 +1,4 @@
-import {
-	Button,
-	H2,
-	Input,
-	Text,
-	FormField,
-	FormFieldHelperText,
-	FormFieldLabel,
-} from "@salt-ds/core";
+import { Button, H2, Input, Text, FormFieldHelperText } from "@salt-ds/core";
 import { useState, type SubmitEvent, type ChangeEvent } from "react";
 import { useRegisterMutation } from "../features/auth/usersApi";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +16,6 @@ const Register = () => {
 		setError(null);
 		try {
 			const result = await register({ email, password }).unwrap();
-			console.log(result, "result");
 
 			if ("message" in result) {
 				// backend returned a 200 with a message (e.g. already registered)

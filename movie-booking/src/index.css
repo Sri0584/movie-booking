@@ -45,3 +45,10 @@
 .m-b-20 {
 	margin-bottom: 20px;
 }
+.hidden {
+	visibility: hidden;
+}
+.message {
+	margin-left: 10px;
+	font-weight: bold;
+}

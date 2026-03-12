@@ -14,7 +14,12 @@ export const bookingApi = createApi({
 			}),
 			invalidatesTags: ["Booking"],
 		}),
+		getBookedTickets: builder.query<string[], void>({
+			query: () => "/my-tickets",
+			providesTags: ["Booking"],
+		}),
 	}),
 });
 
-export const { useCreateBookingMutation } = bookingApi;
+export const { useCreateBookingMutation, useGetBookedTicketsQuery } =
+	bookingApi;
