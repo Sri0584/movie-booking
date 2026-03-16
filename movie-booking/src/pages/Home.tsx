@@ -4,7 +4,7 @@ import { useSeedMoviesMutation } from "../features/movies/moviesApi";
 import MovieCard from "../components/UI/MovieCard";
 import type { Movie } from "../features/movies/types";
 import { useNavigate } from "react-router-dom";
-import { Suspense, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import { useGetBookedTicketsQuery } from "../features/booking/bookingApi";
 import { getRtkErrorMessage } from "../utils/helpers";
 import { useAppSelector } from "../app/hooks";
@@ -19,6 +19,7 @@ const Home = () => {
 	} = useGetMoviesQuery();
 	const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 	const [seed, { isLoading: isSeeding }] = useSeedMoviesMutation();
+	const bookingLoadingRef = useRef(false);
 	const {
 		data: bookedTickets,
 		isError: isBookingError,
@@ -85,7 +86,11 @@ const Home = () => {
 							<MovieCard
 								key={movie.id}
 								movie={movie}
-								onBook={() => navigate(`/booking/${movie.id}`)}
+								onBook={() => {
+									bookingLoadingRef.current = true;
+									navigate(`/booking/${movie.id}`);
+								}}
+								isBookingLoading={bookingLoadingRef.current}
 							/>
 						))}
 					</FlexLayout>

@@ -33,12 +33,8 @@ const Header = () => {
 						</>
 					) : (
 						<>
-							<Link to='/login'>
-								<Button appearance='transparent'>Login</Button>
-							</Link>
-							<Link to='/register'>
-								<Button appearance='transparent'>Register</Button>
-							</Link>
+							<Button appearance='transparent' onClick={() => navigate("/login")}>Login</Button>
+							<Button appearance='transparent' onClick={() => navigate("/register")}>Register</Button>
 						</>
 					)}
 				</FlexLayout>

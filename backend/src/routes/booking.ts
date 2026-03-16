@@ -49,6 +49,7 @@ router.get("/my-tickets", auth, async (req: AuthRequest, res) => {
 		.lean();
 	if (bookings.length === 0)
 		return res.status(404).json({ message: "No bookings on your name" });
+	console.log(bookings);
 	const missing = bookings.find((b) => !(b.movie as any)?.title);
 	if (missing) {
 		return res.status(404).json({
