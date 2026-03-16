@@ -12,6 +12,11 @@ const ROW_LABELS_PREMIUM = ["I", "J", "K", "L"];
 const ROW_LABELS_VIP = ["M", "N", "O", "P"];
 const HIDDEN_SEATS_COL = [5, 6]; // Example: Hide seats 6 and 7 in each row (0-indexed)
 const HIDDEN_SEATS_ROW = ["D", "L", "O", "B"]; // Example: Hide row D and L
+const SECTIONS = [
+	{ id: "BASIC", label: "BASIC", rows: ROW_LABELS_BASIC },
+	{ id: "PREMIUM", label: "PREMIUM", rows: ROW_LABELS_PREMIUM },
+	{ id: "VIP", label: "VIP", rows: ROW_LABELS_VIP },
+  ];
 
 const SeatSelector = ({ onSeatsSelected }: SeatSelectorProps) => {
 	const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
@@ -45,12 +50,47 @@ const SeatSelector = ({ onSeatsSelected }: SeatSelectorProps) => {
 		</button>
 	);
 
+	// Map over SECTIONS array to create all section blocks dynamically
+const renderSections = () =>
+	SECTIONS.map((section) => (
+		<>
+			<Text key={section.id} className='section-label'>{section.label}</Text>
+			{Array.from({ length: section.rows.length }).map((_, row) => (
+				<div key={`${section.id}-${row}`} className='seat-row'>
+					<div className='row-label'>{section.rows[row]}</div>
+					{Array.from({ length: COLS }).map((_, col) => {
+						const seatId = `${section.id}-${section.rows[row]}${col + 1}`;
+						const isSelected = selectedSeats?.includes?.(seatId);
+						const isHidden =
+							HIDDEN_SEATS_COL.includes(col) &&
+							HIDDEN_SEATS_ROW.includes(section.rows[row]);
+						if (isHidden) {
+							return hidden(seatId, col);
+						}
+						return (
+							<button
+								key={seatId}
+								className={`seat${isSelected ? " selected" : ""}`}
+								title={seatId}
+								onClick={() => toggleSeat(row, col, section.id)}
+								type="button"
+							>
+								{col + 1}
+							</button>
+						);
+					})}
+				</div>
+			))}
+		</>
+	));
+
 	return (
 		<div className='seat-selector-container'>
 			<div className='seat-grid-wrapper'>
 				<div className='seat-grid'>
+					{renderSections()}
 					{/* Seats */}
-					<Text className='section-label'>BASIC</Text>
+					{/* <Text className='section-label'>BASIC</Text>
 					{Array.from({ length: ROW_LABELS_BASIC.length }).map((_, row) => (
 						<div key={row} className='seat-row'>
 							<div className='row-label'>{ROW_LABELS_BASIC[row]}</div>
@@ -128,7 +168,7 @@ const SeatSelector = ({ onSeatsSelected }: SeatSelectorProps) => {
 								);
 							})}
 						</div>
-					))}
+					))} */}
 				</div>
 
 				{/* Screen */}

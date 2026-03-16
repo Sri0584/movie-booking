@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Suspense, useState } from "react";
 import { useGetBookedTicketsQuery } from "../features/booking/bookingApi";
 import { getRtkErrorMessage } from "../utils/helpers";
+import { useAppSelector } from "../app/hooks";
 
 const Home = () => {
 	const navigate = useNavigate();
@@ -16,6 +17,7 @@ const Home = () => {
 		isError: isMoviesError,
 		error: moviesError,
 	} = useGetMoviesQuery();
+	const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 	const [seed, { isLoading: isSeeding }] = useSeedMoviesMutation();
 	const {
 		data: bookedTickets,
@@ -58,7 +60,7 @@ const Home = () => {
 					</Text>
 				)}
 			</div>
-			<div>
+		{ isAuthenticated && <div>
 				<Text>
 					<span style={{ fontWeight: "bold", color: "blueviolet" }}>
 						Your booked tickets:
@@ -72,7 +74,7 @@ const Home = () => {
 				{bookingErrormessage && (
 					<Text className='error message'>{bookingErrormessage}</Text>
 				)}
-			</div>
+			</div>}
 
 			<FlexLayout gap={3} wrap>
 				{moviesData?.map((movie: Movie) => (
