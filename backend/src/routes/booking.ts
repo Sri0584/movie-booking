@@ -47,19 +47,22 @@ router.get("/my-tickets", auth, async (req: AuthRequest, res) => {
 	const bookings = await Booking.find({ user: req.userId })
 		.populate("movie")
 		.lean();
-	console.log(bookings);
-
 	if (bookings.length === 0)
 		return res.status(404).json({ message: "No bookings on your name" });
+	const missing = bookings.find((b) => !(b.movie as any)?.title);
+	if (missing) {
+		return res.status(404).json({
+			message: "A booked movie was deleted",
+			bookingId: (missing as any)._id?.toString?.(),
+		});
+	}
 	const bookedTickets = bookings.map((booking) => {
 		const { movie, seats, showTime } = booking;
-		const { title } = { ...(movie as any) };
-		if (!title)
-			return res.status(404).json({ message: "No bookings on your name" });
+		const title = (movie as any)?.title ?? "Unknown movie (deleted?)";
 		return `Movie: ${title} - Seats: ${seats.join(", ")} - Show Time: ${new Date(
 			showTime,
 		).toLocaleString()}`;
-	});
+	})
 	res.json(bookedTickets);
 });
 

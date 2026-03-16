@@ -20,14 +20,14 @@ export default function ErrorPage() {
 	}
 
 	return (
-		<div className='error-page'>
-			<H1>{errorStatus}</H1>
-			<Text className='m-b-20'>
-				<strong>{errorMessage}</strong>
+		<main className='error-page' aria-label='Error page' aria-labelledby='Error page' role='alert' aria-live='assertive' aria-atomic='true'>
+			<H1 aria-label='Error status' aria-labelledby='Error status'>{errorStatus}</H1>
+			<Text aria-label='Error message' aria-labelledby='Error message'>
+				<strong aria-label='Error message' aria-labelledby='Error message'>{errorMessage}</strong>
 			</Text>
-			<Button appearance='solid' onClick={() => navigate("/")}>
-				Back to Home
+			<Button appearance='solid' onClick={() => navigate("/")} aria-label='Back to Home' aria-labelledby='Back to Home'>
+				<Text aria-label='Back to Home' aria-labelledby='Back to Home'>Back to Home</Text>
 			</Button>
-		</div>
+		</main>
 	);
 }

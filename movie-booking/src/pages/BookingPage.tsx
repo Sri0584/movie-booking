@@ -71,13 +71,37 @@ const BookingPage = () => {
 
 	if (bookingSuccess) {
 		return (
-			<div style={{ textAlign: "center", padding: "40px" }}>
-				<H2 style={{ color: "green" }}>✓ Booking Confirmed!</H2>
-				<Text style={{ fontSize: "16px", marginTop: "10px" }}>
-					`Your booking is confirmed for the seats ${selectedSeats.join(", ")}{" "}
-					on ${formatted(showTime)} . Redirecting to home...`
+			<main style={{ textAlign: "center", padding: "40px" }}>
+				<H2
+					aria-label='Booking confirmed'
+					aria-labelledby='Booking confirmed'
+					style={{ color: "green" }}
+				>
+					✓ Booking Confirmed!
+				</H2>
+				<Text
+					aria-label='Booking confirmed message'
+					aria-labelledby='Booking confirmed message'
+					role='alert'
+					aria-live='assertive'
+					aria-atomic='true'
+					as='p'
+					style={{ fontSize: "16px", marginTop: "10px" }}
+				>
+					Your booking is confirmed for the seats {selectedSeats.join(", ")} on
+					{formatted(showTime)} . Redirecting to home...
 				</Text>
-			</div>
+				<Button
+					appearance='solid'
+					onClick={() => navigate("/")}
+					aria-label='Back to home'
+					aria-labelledby='Back to home'
+				>
+					<Text aria-label='Back to home' aria-labelledby='Back to home'>
+						Back to home
+					</Text>
+				</Button>
+			</main>
 		);
 	}
 
